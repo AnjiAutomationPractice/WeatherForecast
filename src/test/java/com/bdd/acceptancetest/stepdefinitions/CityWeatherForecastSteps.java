@@ -15,11 +15,9 @@ public class CityWeatherForecastSteps implements Config{
 
   private Homepage homepage;
 
-
-
   @Given("^I launch weather forecast site$")
   public void i_launch_weather_forecast_site() throws Throwable {
-     homepage = new Homepage(BrowserDriver.getCurrentDriver());
+    homepage = new Homepage(BrowserDriver.getCurrentDriver());
 
   }
 
@@ -43,9 +41,14 @@ public class CityWeatherForecastSteps implements Config{
 
   }
 
-  @Then("^I should see forecast hourly for selected (\\d+)$")
+  @Then("^I should see hourly forecast for selected (\\d+)$")
   public void i_should_see_forecast_hourly_for_selected(int day) throws Throwable {
     Assert.assertTrue("Hourly forecast not displayed for every 3 hours", homepage.getHourlyForecastTimes(day));
+  }
+
+  @Then("^I should not see hourly forecast for selected (\\d+)$")
+  public void iShouldNotSeeHourlyForecastForSelectedDay(int day) throws Throwable {
+    Assert.assertTrue("Hourly forecast has displayed for every 3 hours", homepage.isHourlyForecastHidden(day));
   }
 
   @Then("^I should see the minimim (.*) and maximum (.*) temperatures for selected day (.*) and hour (.*)$")
@@ -55,8 +58,27 @@ public class CityWeatherForecastSteps implements Config{
     int actualMaxTemp = homepage.getMaxTemperature(day, hour);
     Assert.assertEquals(maxTemp, actualMaxTemp);
 
+  }
 
+  @Then("^I should see the aggregate rainfall (.*) for selected day (.*)$")
+  public void iShouldSeeTheAggregateRainfallAggregateRainfallForSelectedDayDay(int aggregateRainfall, int day) throws Throwable {
+    int actualAggregateRainfall = homepage.getAggregateRainfall(day);
+    Assert.assertEquals(aggregateRainfall, actualAggregateRainfall);
 
   }
+
+  @Then("^I should see the wind speed (.*) for selected day (.*)$")
+  public void iShouldSeeTheWindSpeedWindSpeedForSelectedDayDay(int windSpeed, int day) throws Throwable {
+    int actualWindSpeed = homepage.getWindSpeed(day);
+    Assert.assertEquals(windSpeed, actualWindSpeed);
+  }
+
+  @Then("^I should see the pressure (.*) for selected day (.*)$")
+  public void iShouldSeeThePressurePressureForSelectedDayDay(int pressure, int day) throws Throwable {
+    int actualPressure = homepage.getPressure(day);
+    Assert.assertEquals(pressure, actualPressure);
+
+  }
+
 
 }

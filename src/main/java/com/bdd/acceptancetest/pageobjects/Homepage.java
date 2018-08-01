@@ -2,11 +2,15 @@ package com.bdd.acceptancetest.pageobjects;
 
 
 import com.bdd.acceptancetest.util.BrowserDriver;
+
+import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
 import static org.junit.Assert.*;
 import static com.bdd.acceptancetest.util.BrowserDriver.*;
 
@@ -34,7 +38,6 @@ public class Homepage extends BasePage {
   String hourForecastPartTwo = ") > div.details > div:nth-child(";
   String hourForecastPartThree = ") > span:nth-child(1) > span";
 
-
   public Homepage(WebDriver driver){
     super(driver);
     visit(baseUrl + "/");
@@ -58,14 +61,14 @@ public class Homepage extends BasePage {
   }
 
   public String getDayOne(){
-     return waitUntilElemenetLocated(dayOneSelector).getText();
+    return waitUntilElemenetLocated(dayOneSelector).getText();
   }
 
 
   public void choseADay(int day) {
-        int daySelector = day + 1;
-        clickOnElement(By.cssSelector(dayPartOne + daySelector + dayPartTwo));
-        waitForElement(find(By.cssSelector(hourPartOne + daySelector + hourPartTwo)));
+    int daySelector = day + 1;
+    clickOnElement(By.cssSelector(dayPartOne + daySelector + dayPartTwo));
+    waitForElement(find(By.cssSelector(hourPartOne + daySelector + hourPartTwo)));
 
 
   }
@@ -76,15 +79,31 @@ public class Homepage extends BasePage {
     int totalHourlyForecasts = findElements(By.cssSelector(hourlyForecastPartOne + daySelector + hourlyForecastPartTwo)).size();
     for(int i=1; i < totalHourlyForecasts-1; i ++ ){
 
-       int firstHour = Integer.parseInt(find(By.cssSelector(hourForecastPartOne + daySelector + hourForecastPartTwo + i  + hourForecastPartThree )).getText());
-       int secondHour = Integer.parseInt(find(By.cssSelector(hourForecastPartOne + daySelector + hourForecastPartTwo + (i+1) + hourForecastPartThree )).getText());
+      int firstHour = Integer.parseInt(find(By.cssSelector(hourForecastPartOne + daySelector + hourForecastPartTwo + i  + hourForecastPartThree )).getText());
+      int secondHour = Integer.parseInt(find(By.cssSelector(hourForecastPartOne + daySelector + hourForecastPartTwo + (i+1) + hourForecastPartThree )).getText());
 
-        if (secondHour-firstHour != 300){
-          break;
-        } else {
-          result = true;
-        }
+      if (secondHour-firstHour != 300){
+        break;
+      } else {
+        result = true;
+      }
 
+    }
+    return result;
+  }
+
+  public boolean isHourlyForecastHidden(int day) {
+    boolean result = false;
+    int daySelector = day + 1;
+    List<WebElement> forecastHours = findElements(By.cssSelector(hourlyForecastPartOne + daySelector + hourlyForecastPartTwo));
+    int totalHoursCount = forecastHours.size();
+    for (int i = 0; i < totalHoursCount; i++) {
+      int x = forecastHours.get(i).getLocation().getX();
+      if (x != 8) {
+        break;
+      } else {
+        result = true;
+      }
     }
     return result;
   }
@@ -103,5 +122,36 @@ public class Homepage extends BasePage {
     int minTemp = Integer.parseInt(minTempText.substring(0,minTempText.length()-1));
     Math.round(minTemp);
     return minTemp;
+  }
+
+  public int getAggregateRainfall(int day){
+    int daySelector = day+1;
+    By aggregateRainFallLocator = By.cssSelector("div:nth-child("+daySelector+") div.summary span.cell:nth-child(5) > span.rainfall");
+    String aggregateRainfallText = getText(aggregateRainFallLocator);
+    int aggregateRainfall = Integer.parseInt(aggregateRainfallText.substring(0,aggregateRainfallText.length()-2));
+    return aggregateRainfall;
+  }
+
+  public int getWindSpeed(int day){
+    int daySelector = day+1;
+    By windSpeedLocator = By.cssSelector("div:nth-child("+daySelector+") div.summary span.cell:nth-child(4) > span.speed");
+    String windSpeedText = getText(windSpeedLocator);
+    int windSpeed = Integer.parseInt(windSpeedText.substring(0, windSpeedText.length()-3));
+    return windSpeed;
+  }
+
+  public int getWindDirection(int day){
+    By windDirectionLocator = By.xpath("//body/div[@id='root']/div[@data-radium='true']/div["+day+"]/div[1]/span[4]/span[2]/*[1]");
+    String windDirectionText = getText(windDirectionLocator);
+    int windDirection = Integer.parseInt(windDirectionText);
+    return windDirection;
+  }
+
+  public int getPressure(int day){
+    int daySelector = day+1;
+    By pressureLocator = By.cssSelector("div:nth-child("+ daySelector+") div.summary span.cell:nth-child(5) > span.rmq-5ea3c959.pressure");
+    String pressureText = getText(pressureLocator);
+    int pressure = Integer.parseInt(pressureText.substring(0,pressureText.length()-2));
+    return pressure;
   }
 }
