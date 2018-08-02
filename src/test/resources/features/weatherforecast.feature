@@ -20,6 +20,7 @@ Feature: City Weather Forecast
     Examples:
       | city      | day |
       | Edinburgh | 1   |
+      | Glasgow   | 2   |
 
 
   Scenario Outline: Selecting day again should hide hourly forecast
@@ -83,7 +84,7 @@ Feature: City Weather Forecast
       | Edinburgh | 1   | 1    | 13      | 16      |
       | Edinburgh | 1   | 2    | 14      | 16      |
       | Edinburgh | 1   | 3    | 12      | 13      |
-      | Edinburgh | 1   | 3    | 12      | 13      |
+      | Edinburgh | 1   | 4    | 7       | 7       |
 
 
 

@@ -108,6 +108,10 @@ public class Homepage extends BasePage {
     return result;
   }
 
+// TO-DO Improvement
+// Ensure CSS Selectors moved to Page Object locators section
+
+
   public int getMaxTemperature(int dayTemp, int hourTemp) {
     By maxTempLocator = By.xpath("//*[@id='root']/div/div[" + dayTemp + "]/div[2]/div[" + hourTemp + "]/span[3]/span[1]");
     String maxTempText = getText(maxTempLocator);
